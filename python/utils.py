@@ -161,7 +161,12 @@ def _gen_noisy(clean_file_list, noise_file_list, save_dir, snr, sr_clean, sr_noi
     y_noise = y_noise - np.mean(y_noise)
     noise_variance = clean_pwr / (10**(SNR / 10))
     noise = np.sqrt(noise_variance) * y_noise / np.std(y_noise)
-    y_noisy = y_clean + noise
+    #y_noisy = y_clean + noise
+
+    # add delay and truncate to match a clean file
+    delayed = sndfx(y_clean)
+    y_noisy = delayed[:len(y_clean)]
+
     maxv = np.iinfo(np.int16).max
     save_name = '{}_{}_{}.wav'.format(snr, noise_name, clean_name)
     librosa.output.write_wav(
