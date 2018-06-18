@@ -27,7 +27,7 @@ tf.flags.DEFINE_string('saver_dir', '../model/saver', 'set folder for saver')
 tf.flags.DEFINE_bool('TRAIN', True, 'train this model or not')
 tf.flags.DEFINE_bool('TEST', True, 'test this model or not')
 tf.flags.DEFINE_integer('n_cores', 20, 'set cpu cores')
-tf.flags.DEFINE_integer('epochs', 50, 'epochs for training iterations')
+tf.flags.DEFINE_integer('epochs', 100, 'epochs for training iterations')
 tf.flags.DEFINE_integer('batch_size', 32, 'number of batch size')
 tf.flags.DEFINE_float('learning_rate', 1e-3, 'learning rate')
 
@@ -62,7 +62,7 @@ def main():
     train_noisy_dir = join(noisy_dir, 'train')
     sr_clean = 16000
     sr_noise = 44100
-    snr_list = ['20dB', '0dB', '-20dB']
+    snr_list = ['200ms', '0ms', '300ms']
     data_num = 100  # set data_num to make training data numbers for different snr
     syn_train = Synth(clean_train_list, noise_train_list[
                       0:10], sr_clean, sr_noise)
@@ -73,7 +73,7 @@ def main():
     sr_clean = 16000
     sr_noise = 44100
     data_num = 10 # set data_num to make testing data numbers for different snr
-    snr_list = ['15dB', '5dB', '-5dB']
+    snr_list = ['200ms', '100ms', '300ms']
     syn_train = Synth(clean_test_list, noise_train_list[
                       0:10], sr_clean, sr_noise)
     syn_train.gen_noisy(snr_list, test_noisy_dir,

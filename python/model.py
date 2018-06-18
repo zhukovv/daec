@@ -85,7 +85,7 @@ class REG:
                     self.y_clean, self.reg_layer)
 
                 tf.summary.scalar('Loss reg', self.loss_reg)
-            
+
             with tf.name_scope("exp_learning_rate"):
                 self.global_step = tf.Variable(0, trainable=False)
                 self.exp_learning_rate = tf.train.exponential_decay(self.init_learning_rate,
@@ -116,7 +116,7 @@ class REG:
             min_delta = 0.01
             step = 0
             epochs = range(epochs)
-            
+
             tf.global_variables_initializer().run()
             writer = tf.summary.FileWriter(
                 self.tb_dir, sess.graph,  max_queue=10)
@@ -192,7 +192,7 @@ class REG:
                 file_name = file.split('/')[-1]
                 try:
                     snr, noise_name, clean_name1, clean_neme2 = file.split('/')[-1].split('_')
-                    clean_file = join(testing_data_dir, '_'.join(['0dB', 'n0', clean_name1, clean_neme2]))
+                    clean_file = join(testing_data_dir, '_'.join(['0ms', 'n0', clean_name1, clean_neme2]))
                     noisy_file = file
                 except:
                     snr, noise_name, clean_name = file.split('/')[-1].split('_')

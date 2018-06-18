@@ -10,12 +10,6 @@ from os.path import join
 
 from pysndfx import AudioEffectsChain
 
-sndfx = (
-    AudioEffectsChain()
-    .delay( gain_in=1.0, gain_out=0.5, delays=list((250, 400)), decays=list((0.1, 0.15)), parallel=False)
-)
-
-
 epsilon = np.finfo(float).eps
 
 
@@ -140,7 +134,7 @@ def copy_file(input_file, output_file):
 def _gen_noisy(clean_file_list, noise_file_list, save_dir, snr, sr_clean, sr_noise, num=None):
     sr_clean = 16000
     sr_noise = 20000
-    SNR = float(snr.split('dB')[0])
+    delay = float(snr.split('ms')[0])
     clean_file = clean_file_list[num]
     noise_file = noise_file_list[num]
     clean_name = clean_file.split('/')[-1].split('.')[0]
@@ -151,19 +145,23 @@ def _gen_noisy(clean_file_list, noise_file_list, save_dir, snr, sr_clean, sr_noi
     clean_pwr = sum(abs(y_clean)**2) / len(y_clean)
     y_noise, sr_noise = librosa.load(noise_file, sr_noise, mono=True)
 
-    tmp_list = []
-    if len(y_noise) < len(y_clean):
-        tmp = (len(y_clean) // len(y_noise)) + 1
-        y_noise = np.array([x for j in [y_noise] * tmp for x in j])
-        y_noise = y_noise[:len(y_clean)]
-    else:
-        y_noise = y_noise[:len(y_clean)]
-    y_noise = y_noise - np.mean(y_noise)
-    noise_variance = clean_pwr / (10**(SNR / 10))
-    noise = np.sqrt(noise_variance) * y_noise / np.std(y_noise)
+    #tmp_list = []
+    #if len(y_noise) < len(y_clean):
+    #    tmp = (len(y_clean) // len(y_noise)) + 1
+    #    y_noise = np.array([x for j in [y_noise] * tmp for x in j])
+    #    y_noise = y_noise[:len(y_clean)]
+    #else:
+    #    y_noise = y_noise[:len(y_clean)]
+    #y_noise = y_noise - np.mean(y_noise)
+    #noise_variance = clean_pwr / (10**(SNR / 10))
+    #noise = np.sqrt(noise_variance) * y_noise / np.std(y_noise)
     #y_noisy = y_clean + noise
 
     # add delay and truncate to match a clean file
+    sndfx = (
+        AudioEffectsChain()
+        .delay( gain_in=1.0, gain_out=0.5, delays=list((delay+1, (delay+1)*1.5)), decays=list((0.1, 0.15)), parallel=False)
+    )
     delayed = sndfx(y_clean)
     y_noisy = delayed[:len(y_clean)]
 

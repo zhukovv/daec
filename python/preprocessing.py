@@ -58,13 +58,13 @@ class Synth:
             pool.close()
             pool.join()
 
-        
+
         if ADD_CLEAN:
             ## This function will set 'n0' as clean data
             num_list = range(len(clean_data_list))
             pool = Pool(cpu_cores)
             func = partial(_gen_clean, clean_data_list,
-                           noisy_dir, '0dB')
+                           noisy_dir, '0ms')
             pool.map(func, num_list)
             pool.close()
             pool.join()
@@ -90,22 +90,22 @@ class GenMatrix:
         training_data_list = search_wav(self.noisy_dir)
         print('Total training files: ', len(training_data_list))
 
-        
+
         for file in training_data_list:
             try:
                 snr, noise_name, clean_name1, clean_neme2 = file.split('/')[-1].split('_')
-                clean_file = join(self.noisy_dir, '_'.join(['0dB', 'n0', clean_name1, clean_neme2]))
+                clean_file = join(self.noisy_dir, '_'.join(['0ms', 'n0', clean_name1, clean_neme2]))
                 noisy_file = file
             except:
                 snr, noise_name, clean_name = file.split('/')[-1].split('_')
-                clean_file = join(self.noisy_dir, '_'.join(['0dB', 'n0', clean_name]))
+                clean_file = join(self.noisy_dir, '_'.join(['0ms', 'n0', clean_name]))
                 noisy_file = file
 
 
 
             tmp1.append(clean_file)
             tmp2.append(noisy_file)
-        
+
         training_num = 30000
         t1, t2 = shuffle(np.array(tmp1), np.array(tmp2))
         t1 = t1[:training_num]

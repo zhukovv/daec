@@ -2,6 +2,7 @@
 
 ### Prerequisites
 `sudo pip3 install tensorflow scikit-learn scipy h5py numpy tqdm pysndfx librosa==0.5.1`
+
 `sudo apt-get install sox`
 
 ### Getting Started
